@@ -25,7 +25,7 @@
  #  click_button button :match => :prefer_exact
    sleep 3;
    click_on(button,:match => :prefer_exact)
-   sleep 5;
+   sleep 20;
    end
    
    When /^Fill textbox with value "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)"$/ do |value,attribute_name,attribute_value|
@@ -60,6 +60,7 @@
    #find(:xpath, "//textarea[@#{attribute_name}='#{attribute_value}']").set value
    #page.execute_script("$(\"textarea[#{attribute_name}='#{attribute_value}']\").val('#{value}').trigger('input')")
    page.execute_script("$(\"select[#{attribute_name}='#{attribute_value}']:nth(0)\").find(\"option:contains('#{value}')\").attr(\"selected\",true).change()")
+   
    sleep 2;
    end
 
@@ -96,23 +97,57 @@ end
 
 
 Then /^click ok$/ do
-  page.driver.browser.switch_to.alert.accept# express the regexp above with the code you wish you had
-end
-
- #When /^I uploading the something with path of image "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)" and number is "([^"]*)"$/ do |image_path,attribute_name,attribute_value,num|
+  sleep 3; 
+  #page.evaluate_script('window.prompt = function() { return true; }')
+  #page.click('OK')
    
+  #page.driver.accept_js_confirms!
+   alert1 = page.driver.browser.switch_to.alert;
+  alert1.accept;
    
-  # page.driver.browser.all(:xpath, "//input[@#{attribute_name}='#{attribute_value}']")[num.to_i].send_keys("#{image_path}") 
-
- #sleep 40;
+  #Alert alert = driver.switchTo().alert();
+  #alert.accept();
+  sleep 3;
   
-#end  
+  end
 
- #When /^I uploading the something with path of image "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)"$/ do |image_path,attribute_name,attribute_value|
+
+ When /^I uploading the something with path of image "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)" and number is "([^"]*)"$/ do |image_path,attribute_name,attribute_value,num|
+   
+   
+  page.driver.browser.all(:xpath, "//input[@#{attribute_name}='#{attribute_value}']")[1].send_keys("#{image_path}") 
+
+ sleep 40;
+  
+end  
+
+ When /^I am uploading something with path of image "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)"$/ do |image_path,attribute_name,attribute_value|
    #C:/proversity_test/learn.jpg
      #page.driver.browser.all(:xpath, "//input[@#{attribute_name}='#{attribute_value}']")[1].send_keys("#{image_path}") 
    #find(:xpath, "//input[@#{attribute_name}='#{attribute_value}']").set value
 
-  #page.driver.browser.all(:xpath, '//input[@#{attribute_name}="#{attribute_value}"]')[0].send_keys('C:/proversity_test/learn.jpg') 
-  #sleep 30;
-#end
+  page.driver.browser.all(:xpath,"//input[@#{attribute_name}='#{attribute_value}']")[0].send_keys("#{image_path}") 
+  sleep 10;
+  save_and_open_screenshot;
+end
+
+When /^I am uploading something with path of video "([^"]*)" with attribute name "([^"]*)" and attribute value "([^"]*)"$/ do |video_path,attribute_name,attribute_value|
+   #C:/proversity_test/learn.jpg
+     #page.driver.browser.all(:xpath, "//input[@#{attribute_name}='#{attribute_value}']")[1].send_keys("#{image_path}") 
+   #find(:xpath, "//input[@#{attribute_name}='#{attribute_value}']").set value
+sleep 5;
+  page.driver.browser.all(:xpath,"//input[@#{attribute_name}='#{attribute_value}']")[0].send_keys("#{video_path}") 
+  sleep 10;
+end
+
+
+Then /^click@link "([^"]*)"$/ do |arg1|
+  sleep 2;
+  click_link(arg1)
+  sleep 2;
+end
+
+Given /^check content "([^"]*)"$/ do |arg1|
+  #page.has_content?(arg1)
+   page.should have_content(arg1)
+end
